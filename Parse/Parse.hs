@@ -12,7 +12,22 @@ data LispVal = Atom String
              | Number Integer
              | String String
              | Character Char
-             | Bool Bool deriving (Show)
+             | Bool Bool 
+
+showVal :: LispVal -> String
+showVal (String contents) = "\"" ++ contents ++ "\""
+showVal (Atom name) = name
+showVal (Number contents) = show contents
+showVal (Bool True) = "#t"
+showVal (Bool False) = "#f"
+
+showVal (List contents) = "(" ++ unwordsList contents ++ ")"
+showVal (DottedList head tail) = "(" ++ unwordsList head ++ " . " ++ showVal tail ++ ")"
+
+unwordsList :: [LispVal] -> String
+unwordsList vals = unwords $ map showVal vals
+
+instance Show LispVal where show = showVal
 
 parseExpr :: Parser LispVal
 parseExpr = parseChar
@@ -101,10 +116,6 @@ symbol = oneOf "!#$%&|*+-/:<=>?@^_~"
 spaces :: Parser ()
 spaces = skipMany1 space
 
-readExpr :: String -> String
-readExpr input = case parse parseExpr "lisp" input of
-    Left err -> "No match: " ++ show err
-    Right v -> "Found value" ++ show v
 
 
 parseNumber :: Parser LispVal
