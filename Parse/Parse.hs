@@ -1,6 +1,9 @@
+module Parse.Parse where
+
 import Text.ParserCombinators.Parsec hiding (spaces)
 import System.Environment
 import Control.Monad
+
 
 data LispVal = Atom String
              | Nil
@@ -120,7 +123,3 @@ parseNumber  = many1 digit >>= \val -> return $ Number (read val)
 --                val <- many1 digit 
 --                return $ Number (read val)
 
-
-main = do 
-  val <- getLine
-  putStrLn $ readExpr val
