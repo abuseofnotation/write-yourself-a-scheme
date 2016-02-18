@@ -8,8 +8,13 @@ import Eval.Eval
 
 readExpr :: String -> String
 readExpr input = case parse parseExpr "lisp" input of
-    Left err -> "No match: " ++ show err
-    Right v -> "Found value" ++ (show  (eval v))
+
+    --report parse errors
+    Left err -> "Parse error: " ++ show err
+    Right v -> case eval v of 
+    --report runtime errors
+        Left err -> "Runtime error: " ++ show err
+        Right val -> ">" ++ show val
  
 main :: IO ()
 --main = getLine >>= (liftM . readExpr)
